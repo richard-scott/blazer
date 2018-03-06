@@ -524,7 +524,7 @@ func (b *B2) CreateBucket(ctx context.Context, name, btype string, info map[stri
 		Name:           name,
 		Info:           b2resp.Info,
 		LifecycleRules: respRules,
-		id:             b2resp.BucketID,
+		ID:             b2resp.BucketID,
 		rev:            b2resp.Revision,
 		b2:             b,
 	}, nil
@@ -534,7 +534,7 @@ func (b *B2) CreateBucket(ctx context.Context, name, btype string, info map[stri
 func (b *Bucket) DeleteBucket(ctx context.Context) error {
 	b2req := &b2types.DeleteBucketRequest{
 		AccountID: b.b2.accountID,
-		BucketID:  b.id,
+		BucketID:  b.ID,
 	}
 	headers := map[string]string{
 		"Authorization": b.b2.authToken,
@@ -548,7 +548,7 @@ type Bucket struct {
 	Type           string
 	Info           map[string]string
 	LifecycleRules []LifecycleRule
-	id             string
+	ID             string
 	rev            int
 	b2             *B2
 }
@@ -565,7 +565,7 @@ func (b *Bucket) Update(ctx context.Context) (*Bucket, error) {
 	}
 	b2req := &b2types.UpdateBucketRequest{
 		AccountID: b.b2.accountID,
-		BucketID:  b.id,
+		BucketID:  b.ID,
 		// Name:           b.Name,
 		Type:           b.Type,
 		Info:           b.Info,
@@ -592,7 +592,7 @@ func (b *Bucket) Update(ctx context.Context) (*Bucket, error) {
 		Type:           b2resp.Type,
 		Info:           b2resp.Info,
 		LifecycleRules: respRules,
-		id:             b2resp.BucketID,
+		ID:             b2resp.BucketID,
 		b2:             b.b2,
 	}, nil
 }
@@ -629,7 +629,7 @@ func (b *B2) ListBuckets(ctx context.Context) ([]*Bucket, error) {
 			Type:           bucket.Type,
 			Info:           bucket.Info,
 			LifecycleRules: rules,
-			id:             bucket.BucketID,
+			ID:             bucket.BucketID,
 			rev:            bucket.Revision,
 			b2:             b,
 		})
@@ -660,7 +660,7 @@ func (url *URL) Reload(ctx context.Context) error {
 // GetUploadURL wraps b2_get_upload_url.
 func (b *Bucket) GetUploadURL(ctx context.Context) (*URL, error) {
 	b2req := &b2types.GetUploadURLRequest{
-		BucketID: b.id,
+		BucketID: b.ID,
 	}
 	b2resp := &b2types.GetUploadURLResponse{}
 	headers := map[string]string{
@@ -745,7 +745,7 @@ type LargeFile struct {
 // StartLargeFile wraps b2_start_large_file.
 func (b *Bucket) StartLargeFile(ctx context.Context, name, contentType string, info map[string]string) (*LargeFile, error) {
 	b2req := &b2types.StartLargeFileRequest{
-		BucketID:    b.id,
+		BucketID:    b.ID,
 		Name:        name,
 		ContentType: contentType,
 		Info:        info,
@@ -927,7 +927,7 @@ func (l *LargeFile) FinishLargeFile(ctx context.Context) (*File, error) {
 // ListUnfinishedLargeFiles wraps b2_list_unfinished_large_files.
 func (b *Bucket) ListUnfinishedLargeFiles(ctx context.Context, count int, continuation string) ([]*File, string, error) {
 	b2req := &b2types.ListUnfinishedLargeFilesRequest{
-		BucketID:     b.id,
+		BucketID:     b.ID,
 		Continuation: continuation,
 		Count:        count,
 	}
@@ -962,7 +962,7 @@ func (b *Bucket) ListFileNames(ctx context.Context, count int, continuation, pre
 	b2req := &b2types.ListFileNamesRequest{
 		Count:        count,
 		Continuation: continuation,
-		BucketID:     b.id,
+		BucketID:     b.ID,
 		Prefix:       prefix,
 		Delimiter:    delimiter,
 	}
@@ -1000,7 +1000,7 @@ func (b *Bucket) ListFileNames(ctx context.Context, count int, continuation, pre
 // ListFileVersions wraps b2_list_file_versions.
 func (b *Bucket) ListFileVersions(ctx context.Context, count int, startName, startID, prefix, delimiter string) ([]*File, string, string, error) {
 	b2req := &b2types.ListFileVersionsRequest{
-		BucketID:  b.id,
+		BucketID:  b.ID,
 		Count:     count,
 		StartName: startName,
 		StartID:   startID,
@@ -1040,7 +1040,7 @@ func (b *Bucket) ListFileVersions(ctx context.Context, count int, startName, sta
 // GetDownloadAuthorization wraps b2_get_download_authorization.
 func (b *Bucket) GetDownloadAuthorization(ctx context.Context, prefix string, valid time.Duration) (string, error) {
 	b2req := &b2types.GetDownloadAuthorizationRequest{
-		BucketID: b.id,
+		BucketID: b.ID,
 		Prefix:   prefix,
 		Valid:    int(valid.Seconds()),
 	}
@@ -1134,7 +1134,7 @@ func (b *Bucket) DownloadFileByName(ctx context.Context, name string, offset, si
 // HideFile wraps b2_hide_file.
 func (b *Bucket) HideFile(ctx context.Context, name string) (*File, error) {
 	b2req := &b2types.HideFileRequest{
-		BucketID: b.id,
+		BucketID: b.ID,
 		File:     name,
 	}
 	b2resp := &b2types.HideFileResponse{}
