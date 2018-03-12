@@ -1193,6 +1193,8 @@ func (f *File) GetFileInfo(ctx context.Context) (*FileInfo, error) {
 
 // Key is a B2 application key.
 type Key struct {
+	ID           string
+	Secret       string
 	Name         string
 	Capabilities []string
 	Expires      time.Time
@@ -1218,6 +1220,8 @@ func (b *B2) CreateKey(ctx context.Context, name string, caps []string, valid ti
 	}
 	return &Key{
 		Name:         b2resp.Name,
+		ID:           b2resp.ID,
+		Secret:       b2resp.Secret,
 		Capabilities: b2resp.Capabilities,
 		Expires:      millitime(b2resp.Expires),
 		b2:           b,
@@ -1253,6 +1257,7 @@ func (b *B2) ListKeys(ctx context.Context, max int, next string) ([]*Key, string
 	for _, key := range b2resp.Keys {
 		keys = append(keys, &Key{
 			Name:         key.Name,
+			ID:           key.ID,
 			Capabilities: key.Capabilities,
 			Expires:      millitime(key.Expires),
 			b2:           b,
